@@ -13,6 +13,8 @@ export default {
 </script>
 
 <template>
+  <h1 class="text-center">Week1 作業</h1>
+  <hr />
   <main>
     <div class="container">
       <div class="row py-3">
