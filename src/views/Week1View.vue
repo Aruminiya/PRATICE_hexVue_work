@@ -8,7 +8,7 @@ export default {
       temp: {},
     };
   },
-  computed: { ...mapState(Week1Store, ["products"]) },
+  computed: { ...mapState(Week1Store, ["showProducts"]) },
 };
 </script>
 
@@ -29,7 +29,7 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in products" :key="item.id">
+              <tr v-for="item in showProducts" :key="item.id">
                 <td width="150">{{ item.title }}</td>
                 <td width="120">
                   {{ item.origin_price }}
@@ -56,7 +56,7 @@ export default {
             </tbody>
           </table>
           <p>
-            目前有 <span>{{ products.length }}</span> 項產品
+            目前有 <span>{{ showProducts.length }}</span> 項產品
           </p>
         </div>
         <div class="col-md-6">

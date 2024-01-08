@@ -62,4 +62,9 @@ export default defineStore("Week1Store", {
       },
     ],
   }),
+  getters: {
+    showProducts: ({ products }) => {
+      return products;
+    },
+  },
 });
