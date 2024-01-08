@@ -1,14 +1,24 @@
 import { defineStore } from "pinia";
 
-export default defineStore("Week1Store", {
+const Week2Store = defineStore("Week2Store", {
   //data, methods, computed
   //state, actions, getters
   state: () => ({
-    products: [],
+    products: [{ a: "測試" }],
   }),
+
   getters: {
     showProducts: ({ products }) => {
       return products;
     },
   },
+  actions: {
+    changeProducts(apiData) {
+      Week2Store.$patch((state) => {
+        state.products = apiData;
+      });
+    },
+  },
 });
+
+export default Week2Store;

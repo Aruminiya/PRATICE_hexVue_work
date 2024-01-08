@@ -7,13 +7,12 @@ export default {
     return {
       email: "",
       password: "",
-      loginState: {
-        isSuccess: true,
-      },
+      loginFail: false,
     };
   },
   methods: {
     logIn() {
+      this.loginFail = false;
       this.axios
         .post(`${host}/v2/admin/signin`, {
           username: this.email,
@@ -25,12 +24,16 @@ export default {
           //   console.log(token, expired);
           document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
           //   console.log(document.cookie);
+
           this.email = "";
           this.password = "";
+
+          this.$router.push("/Week2_showPreductView");
         })
         .catch((error) => {
           console.log("登入失敗");
           console.log(error);
+          this.loginFail = true;
         });
     },
   },
@@ -44,8 +47,8 @@ export default {
     <div class="container">
       <div class="row d-flex justify-content-center">
         <div class="col-6">
-          <div class="alert alert-primary" role="alert">
-            A simple primary alert—check it out!
+          <div v-if="loginFail" class="alert alert-danger" role="alert">
+            登入失敗
           </div>
         </div>
 
