@@ -66,7 +66,8 @@ export default {
               </tbody>
             </table>
             <p>
-              目前有 <span>{{ showProducts.length }}</span> 項產品
+              目前有
+              <span>{{ Object.keys(products.products).length }}</span> 項產品
             </p>
           </div>
           <div class="col-md-6">
