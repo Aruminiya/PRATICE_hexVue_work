@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import Swal from "sweetalert2";
+import router from "@/router";
 const Week2Store = defineStore("Week2Store", {
   //data, methods, computed
   //state, actions, getters
@@ -21,7 +23,7 @@ const Week2Store = defineStore("Week2Store", {
       // console.log("token", token);
 
       axios
-        .get(`${host}/v2/api/${path}/admin/products/all`, {
+        .get(`${host}/v/api/${path}/admin/products/all`, {
           headers: { Authorization: token },
         })
         .then((response) => {
@@ -34,6 +36,18 @@ const Week2Store = defineStore("Week2Store", {
         .catch((error) => {
           console.log("取得商品資料失敗");
           console.log(error);
+          Swal.fire({
+            title: "取得商品資料失敗",
+            text: "請重新登入後在嘗試",
+            icon: "error",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "確定",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              router.push("/Week2");
+            }
+          });
         });
     },
   },
