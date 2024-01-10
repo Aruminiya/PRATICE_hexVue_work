@@ -23,7 +23,7 @@ const Week2Store = defineStore("Week2Store", {
       // console.log("token", token);
 
       axios
-        .get(`${host}/v/api/${path}/admin/products/all`, {
+        .get(`${host}/v2/api/${path}/admin/products/all`, {
           headers: { Authorization: token },
         })
         .then((response) => {
