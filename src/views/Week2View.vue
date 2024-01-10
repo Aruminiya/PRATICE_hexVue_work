@@ -44,6 +44,7 @@ export default {
 
 <template>
   <h1 class="text-center">Week2 作業</h1>
+  <p>cookie 新增 SameSite=None; Secure</p>
   <hr />
   <main>
     <div class="container">
