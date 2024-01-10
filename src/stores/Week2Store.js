@@ -21,6 +21,7 @@ const Week2Store = defineStore("Week2Store", {
 
       axios
         .get(`${host}/v2/api/${path}/admin/products/all`, {
+          SameSite: "None",
           headers: { Authorization: token },
         })
         .then((response) => {
