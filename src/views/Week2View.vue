@@ -22,7 +22,9 @@ export default {
           console.log("登入成功");
           const { token, expired } = response.data;
           //   console.log(token, expired);
-          document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
+          document.cookie = `hexToken=${token}; expires=${new Date(
+            expired
+          )}; SameSite=None; Secure`;
           //   console.log(document.cookie);
 
           this.email = "";
