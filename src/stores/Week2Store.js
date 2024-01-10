@@ -16,6 +16,7 @@ const Week2Store = defineStore("Week2Store", {
     changeProducts() {
       const host = import.meta.env.VITE_HEXAPI_HOST;
       const path = import.meta.env.VITE_HEXAPI_PATH;
+      console.log(host, path);
       const token = document.cookie.replace(/^hexToken=/, "");
       // console.log("token", token);
 
