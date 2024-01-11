@@ -19,7 +19,11 @@ const Week2Store = defineStore("Week2Store", {
       const host = import.meta.env.VITE_HEXAPI_HOST;
       const path = import.meta.env.VITE_HEXAPI_PATH;
       console.log(host, path);
-      const token = document.cookie.replace(/^hexToken=/, "");
+      //取得 hexToken 的資料
+      const token = document.cookie.replace(
+        /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
       // console.log("token", token);
 
       axios
@@ -36,18 +40,33 @@ const Week2Store = defineStore("Week2Store", {
         .catch((error) => {
           console.log("取得商品資料失敗");
           console.log(error);
-          Swal.fire({
-            title: "取得商品資料失敗",
-            text: "請重新登入後在嘗試",
-            icon: "error",
-            showCancelButton: false,
-            confirmButtonColor: "#3085d6",
-            confirmButtonText: "確定",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              router.push("/Week2");
-            }
-          });
+          if (token.length === 0) {
+            Swal.fire({
+              title: "登入時間已到期",
+              text: "請重新登入後在嘗試",
+              icon: "error",
+              showCancelButton: false,
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "確定",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                router.push("/Week2");
+              }
+            });
+          } else {
+            Swal.fire({
+              title: "取得商品資料失敗",
+              text: "請重新登入後在嘗試",
+              icon: "error",
+              showCancelButton: false,
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "確定",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                router.push("/Week2");
+              }
+            });
+          }
         });
     },
   },
