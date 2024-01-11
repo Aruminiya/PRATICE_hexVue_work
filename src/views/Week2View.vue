@@ -25,12 +25,23 @@ export default {
           document.cookie = `hexToken=${token}; expires=${new Date(
             expired
           )}; SameSite=None; Secure`;
-          //   console.log(document.cookie);
+
+          // console.log(document.cookie);
 
           this.email = "";
           this.password = "";
 
-          this.$router.push("/Week2_showPreductView");
+          this.$swal({
+            title: "登入成功",
+            icon: "success",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "確定",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/Week2_showPreductView");
+            }
+          });
         })
         .catch((error) => {
           console.log("登入失敗");

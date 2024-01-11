@@ -12,6 +12,7 @@ export default {
   methods: { ...mapActions(Week2Store, ["changeProducts"]) },
   mounted() {
     this.changeProducts();
+    console.log(document.cookie);
   },
 };
 </script>
