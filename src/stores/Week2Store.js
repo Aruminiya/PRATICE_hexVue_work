@@ -11,7 +11,8 @@ const Week2Store = defineStore("Week2Store", {
 
   getters: {
     showProducts: ({ products }) => {
-      return products;
+      //這邊把我需要的部分淺拷貝出來
+      return { ...products.products };
     },
   },
   actions: {
@@ -35,6 +36,7 @@ const Week2Store = defineStore("Week2Store", {
           // console.log(response);
           // 直接更新 store 的狀態
           this.products = response.data;
+          console.log(this.showProducts);
           // console.log(Object.keys(this.products.products).length);
         })
         .catch((error) => {

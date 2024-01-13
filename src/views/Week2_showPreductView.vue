@@ -21,11 +21,11 @@ export default {
   <h1 class="text-center">Week2 作業_登入後產品串接後端展現</h1>
   <hr />
   <main>
-    <!-- <p>{{ products }}</p> -->
+    <p>{{ showProducts }}</p>
 
     <div class="container">
       <div class="row py-3">
-        <h2 v-if="Object.keys(products).length === 0">Loading...</h2>
+        <h2 v-if="Object.keys(showProducts).length === 0">Loading...</h2>
         <template v-else
           ><div class="col-md-6">
             <h2>產品列表</h2>
@@ -40,7 +40,7 @@ export default {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in products.products" :key="item.id">
+                <tr v-for="item in showProducts" :key="item.id">
                   <td width="150">{{ item.title }}</td>
                   <td width="120">
                     {{ item.origin_price }}
@@ -68,7 +68,7 @@ export default {
             </table>
             <p>
               目前有
-              <span>{{ Object.keys(products.products).length }}</span> 項產品
+              <span>{{ Object.keys(showProducts).length }}</span> 項產品
             </p>
           </div>
           <div class="col-md-6">
