@@ -8,8 +8,10 @@ export default {
       temp: {},
     };
   },
-  computed: { ...mapState(Week3Store, ["showProducts", "products"]) },
-  methods: { ...mapActions(Week3Store, ["changeProducts"]) },
+  computed: {
+    ...mapState(Week3Store, ["showProducts", "products", "editTemp"]),
+  },
+  methods: { ...mapActions(Week3Store, ["changeProducts", "editProduct"]) },
   mounted() {
     this.changeProducts();
     // console.log(document.cookie);
@@ -40,18 +42,32 @@ export default {
           </tr>
         </thead>
         <tbody>
+          <p>{{ editTemp }}</p>
           <tr v-for="item in showProducts" :key="item.id">
-            <td>{{ item.category }}</td>
-            <td>{{ item.title }}</td>
-            <td class="text-end">{{ item.origin_price }}</td>
-            <td class="text-end">{{ item.price }}</td>
+            <td>
+              <span>{{ item.category }}</span>
+            </td>
+            <td>
+              <span>{{ item.title }}</span
+              ><span></span>
+            </td>
+            <td class="text-end">
+              <span>{{ item.origin_price }}</span>
+            </td>
+            <td class="text-end">
+              <span>{{ item.price }}</span>
+            </td>
             <td>
               <span v-if="item.is_enabled" class="text-success">啟用</span>
               <span v-else>未啟用</span>
             </td>
             <td>
               <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary btn-sm">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  @click="editProduct(item.id)"
+                >
                   編輯
                 </button>
                 <button type="button" class="btn btn-outline-danger btn-sm">
@@ -61,6 +77,42 @@ export default {
             </td>
           </tr>
         </tbody>
+        <div class="col-md-6">
+          <h2>編輯產品細節</h2>
+          <template v-if="Object.keys(editTemp).length">
+            <div class="card mb-3">
+              <img
+                :src="editTemp.imageUrl"
+                class="card-img-top primary-image"
+                alt="主圖"
+              />
+              <div class="card-body">
+                <p class="card-text">
+                  商品分類：<input type="text" :value="editTemp.category" />
+                </p>
+                <p class="card-text">
+                  商品名稱：<input type="text" :value="editTemp.title" />
+                </p>
+                <p class="card-text">
+                  商品原價：<input type="text" :value="editTemp.origin_price" />
+                </p>
+                <p class="card-text">
+                  商品價格：<input type="text" :value="editTemp.price" />
+                </p>
+                <p class="card-text">
+                  是否啟用：{{ editTemp.is_enabled }}
+
+                  <input type="checkbox" :value="editTemp.is_enabled" />
+                </p>
+              </div>
+            </div>
+            <template v-for="(item, index) in temp.imagesUrl" :key="index">
+              <img :src="item" alt="" class="images m-2" />
+            </template>
+            <br />
+          </template>
+          <p v-else class="text-secondary">請選擇一個商品查看</p>
+        </div>
       </table>
     </div>
   </main>

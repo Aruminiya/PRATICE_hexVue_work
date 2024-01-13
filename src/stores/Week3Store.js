@@ -7,11 +7,12 @@ const Week3Store = defineStore("Week3Store", {
   //state, actions, getters
   state: () => ({
     products: {},
+    editTemp: {},
   }),
 
   getters: {
     showProducts: ({ products }) => {
-      //這邊把我需要的部分淺拷貝出來
+      //這邊把我資料轉成陣列
       return Object.values(products.products);
     },
   },
@@ -19,7 +20,7 @@ const Week3Store = defineStore("Week3Store", {
     changeProducts() {
       const host = import.meta.env.VITE_HEXAPI_HOST;
       const path = import.meta.env.VITE_HEXAPI_PATH;
-      console.log(host, path);
+      // console.log(host, path);
       //取得 hexToken 的資料
       const token = document.cookie.replace(
         /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
@@ -44,10 +45,11 @@ const Week3Store = defineStore("Week3Store", {
           return this.showProducts;
         })
         .then((showProducts) => {
+          //多加入編輯模式來判斷開關
           showProducts.forEach((e) => {
             e.editmode = false;
           });
-          console.log(showProducts);
+          // console.log(showProducts);
         })
         .catch((error) => {
           console.log("取得商品資料失敗");
@@ -80,6 +82,16 @@ const Week3Store = defineStore("Week3Store", {
             });
           }
         });
+    },
+    editProduct(id) {
+      console.log(id);
+      //抓到該編輯資料
+      const editIndex = this.showProducts.findIndex(
+        (productId) => productId.id === id
+      );
+      console.log(editIndex);
+      this.editTemp = this.showProducts[editIndex];
+      console.log(this.editTemp);
     },
   },
 });
