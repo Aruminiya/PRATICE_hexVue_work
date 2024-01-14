@@ -7,7 +7,16 @@ const Week3Store = defineStore("Week3Store", {
   //state, actions, getters
   state: () => ({
     products: {},
-    editTemp: {},
+    dataTemp: {},
+
+    addTemp: {
+      is_enabled: 0,
+      imageUrl: "",
+      category: "",
+      title: "",
+      origin_price: "",
+      price: "",
+    },
   }),
 
   getters: {
@@ -86,12 +95,13 @@ const Week3Store = defineStore("Week3Store", {
     editProduct(id) {
       console.log(id);
       //抓到該編輯資料
-      const editIndex = this.showProducts.findIndex(
+      const dataIndex = this.showProducts.findIndex(
         (productId) => productId.id === id
       );
-      console.log(editIndex);
-      this.editTemp = this.showProducts[editIndex];
-      console.log(this.editTemp);
+      console.log(dataIndex);
+      //這邊放入編輯資料站存區 資料必須要淺拷貝或深拷貝 不然會有 改到同記憶體位置的問題
+      this.dataTemp = { ...this.showProducts[dataIndex] };
+      console.log(this.dataTemp);
     },
   },
 });
