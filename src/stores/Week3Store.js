@@ -9,13 +9,17 @@ const Week3Store = defineStore("Week3Store", {
     products: {},
     dataTemp: {},
 
-    addTemp: {
-      is_enabled: 0,
-      imageUrl: "",
-      category: "",
+    data: {
       title: "",
+      category: "",
       origin_price: "",
       price: "",
+      unit: "",
+      description: "",
+      content: "",
+      is_enabled: 1,
+      imageUrl: "",
+      imagesUrl: ["", "", "", "", ""],
     },
   }),
 
@@ -102,6 +106,91 @@ const Week3Store = defineStore("Week3Store", {
       //這邊放入編輯資料站存區 資料必須要淺拷貝或深拷貝 不然會有 改到同記憶體位置的問題
       this.dataTemp = { ...this.showProducts[dataIndex] };
       console.log(this.dataTemp);
+    },
+    addProduct() {
+      let valid = true;
+
+      Object.values(this.data).forEach((e) => {
+        // 判斷資料有沒有填入
+        if (
+          this.data.imageUrl === "" ||
+          this.data.category === "" ||
+          this.data.unit === "" ||
+          this.data.title === "" ||
+          this.data.origin_price === "" ||
+          this.data.price === ""
+        ) {
+          Swal.fire({
+            icon: "error",
+            title: "資料沒填完",
+            text: "請正確填寫資料",
+          });
+          valid = false; // 如果任何條件不滿足，將 valid 設為 false
+        }
+      });
+
+      if (valid) {
+        console.log(this.data);
+        const host = import.meta.env.VITE_HEXAPI_HOST;
+        const path = import.meta.env.VITE_HEXAPI_PATH;
+        //取得 hexToken 的資料
+        const token = document.cookie.replace(
+          /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        );
+        //推入產品到後端
+        axios
+          .post(
+            `${host}/v2/api/${path}/admin/product`,
+            {
+              data: this.data,
+            },
+            {
+              headers: { Authorization: token },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            Swal.fire({
+              icon: "success",
+              title: "產品建立成功",
+              text: "請回到產品管理頁面查看",
+            });
+            //初始化 data
+            this.data = {
+              title: "",
+              category: "",
+              origin_price: "",
+              price: "",
+              unit: "個",
+              description: "",
+              content: "",
+              is_enabled: 1,
+              imageUrl: "",
+              imagesUrl: ["", "", "", "", ""],
+            };
+          })
+          .catch((err) => {
+            console.error(err);
+            Swal.fire({
+              icon: "error",
+              title: "產品建立失敗",
+              text: "請重新填寫嘗試",
+            });
+            this.data = {
+              title: "",
+              category: "",
+              origin_price: "",
+              price: "",
+              unit: "個",
+              description: "",
+              content: "",
+              is_enabled: 1,
+              imageUrl: "",
+              imagesUrl: ["", "", "", "", ""],
+            };
+          });
+      }
     },
   },
 });

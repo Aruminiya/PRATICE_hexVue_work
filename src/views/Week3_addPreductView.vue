@@ -9,23 +9,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(Week3Store, [
-      "showProducts",
-      "products",
-      "dataTemp",
-      "addTemp",
-    ]),
+    ...mapState(Week3Store, ["showProducts", "products", "dataTemp", "data"]),
   },
   methods: {
     ...mapActions(Week3Store, [
       "changeProducts",
       "editProduct",
       "handleImageError",
+      "addProduct",
     ]),
-  },
-  mounted() {
-    this.changeProducts();
-    // console.log(document.cookie);
   },
 };
 </script>
@@ -36,50 +28,70 @@ export default {
 
     <div class="card mb-3">
       <div class="card-body">
-        <p class="card-text">
+        <p class="card-text mainImg">
           <img
-            :src="addTemp.imageUrl"
+            :src="data.imageUrl"
             class="card-img-top primary-image"
-            alt="主圖"
+            width="100"
           />
+          <br />
+        </p>
+        <p class="card-text">
+          <label for="">主圖</label>
           <input
             type="text"
             placeholder="請輸入圖片網址"
-            v-model.lazy="addTemp.imageUrl"
+            v-model.lazy="data.imageUrl"
           />
         </p>
-
         <p class="card-text">
-          商品分類：<input type="text" v-model="addTemp.category" />
+          商品分類：<input type="text" v-model="data.category" />
         </p>
         <p class="card-text">
-          商品名稱：<input type="text" v-model="addTemp.title" />
+          商品名稱：<input type="text" v-model="data.title" />
         </p>
         <p class="card-text">
-          商品敘述：<textarea
-            type="text"
-            v-model="addTemp.description"
-          ></textarea>
+          商品單位：<input type="text" v-model="data.unit" />
         </p>
         <p class="card-text">
-          商品原價：<input type="number" v-model="addTemp.origin_price" />
+          商品敘述：<textarea type="text" v-model="data.description"></textarea>
         </p>
         <p class="card-text">
-          商品價格：<input type="number" v-model="addTemp.price" />
+          商品原價：<input type="number" v-model="data.origin_price" />
+        </p>
+        <p class="card-text">
+          商品價格：<input type="number" v-model="data.price" />
         </p>
         <p class="card-text">
           是否啟用：
           <label for="is_enabled">{{
-            addTemp.is_enabled === 1 ? "啟用" : "未啟用"
+            data.is_enabled === 1 ? "啟用" : "未啟用"
           }}</label>
           <input
             id="is_enabled"
             type="checkbox"
-            :checked="addTemp.is_enabled === 1"
-            @change="addTemp.is_enabled = addTemp.is_enabled === 1 ? 0 : 1"
+            :checked="data.is_enabled === 1"
+            @change="data.is_enabled = data.is_enabled === 1 ? 0 : 1"
           />
         </p>
-        <button class="btn btn-primary" type="button">新增商品</button>
+        <div class="d-flex">
+          <button
+            class="btn btn-primary mx-1"
+            type="button"
+            @click="addProduct()"
+          >
+            新增商品
+          </button>
+          <RouterLink
+            to="/Week3_showPreductView"
+            class="nav-item nav-link active mx-1"
+            href="#"
+          >
+            <button class="btn btn-outline-primary" type="button">
+              回到商品管理
+            </button></RouterLink
+          >
+        </div>
       </div>
     </div>
     <template v-for="(item, index) in temp.imagesUrl" :key="index">
@@ -88,4 +100,14 @@ export default {
     <br />
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mainImg {
+  height: 300px;
+  background-image: url("https://as2.ftcdn.net/v2/jpg/02/45/49/25/1000_F_245492548_Rqq1vuVKr2SCbmhizERoIxNsY2JPpzz7.jpg");
+  background-size: 300px;
+  background-repeat: no-repeat;
+  img {
+    width: 300px;
+  }
+}
+</style>
