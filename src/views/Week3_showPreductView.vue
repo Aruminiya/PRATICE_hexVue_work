@@ -12,7 +12,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(Week3Store, ["showProducts", "products", "dataTemp"]),
+    ...mapState(Week3Store, ["showProducts", "products", "dataTemp", "data"]),
   },
   methods: {
     ...mapActions(Week3Store, [
@@ -104,9 +104,7 @@ export default {
         </div>
         <div class="col-4">
           <h2>編輯產品細節</h2>
-          <template v-if="Object.keys(dataTemp).length"
-            ><Week3_temp
-          /></template>
+          <template v-if="Object.keys(data).length"><Week3_temp /></template>
 
           <div v-else class="h-100 d-flex justify-content-center">
             <h4 class="editTextShow mt-5">編輯產品資料顯示</h4>

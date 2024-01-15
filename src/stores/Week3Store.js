@@ -7,7 +7,6 @@ const Week3Store = defineStore("Week3Store", {
   //state, actions, getters
   state: () => ({
     products: {},
-    dataTemp: {},
 
     data: {
       title: "",
@@ -97,15 +96,92 @@ const Week3Store = defineStore("Week3Store", {
         });
     },
     editProduct(id) {
-      console.log(id);
-      //抓到該編輯資料位置
-      const dataIndex = this.showProducts.findIndex(
-        (productId) => productId.id === id
-      );
-      console.log(dataIndex);
       //這邊放入編輯資料站存區 資料必須要淺拷貝或深拷貝 不然會有 改到同記憶體位置的問題
-      this.dataTemp = { ...this.showProducts[dataIndex] };
-      console.log(this.dataTemp);
+      this.data = { ...this.products.products[id] };
+      console.log(this.data);
+    },
+    submitEdit(id) {
+      Swal.fire({
+        title: "確定要送出編輯資料嗎?",
+
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "送出編輯",
+        cancelButtonText: "取消",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let valid = true;
+
+          Object.values(this.data).forEach((e) => {
+            // 判斷資料有沒有填入
+            if (
+              this.data.imageUrl === "" ||
+              this.data.category === "" ||
+              this.data.unit === "" ||
+              this.data.title === "" ||
+              this.data.origin_price === "" ||
+              this.data.price === ""
+            ) {
+              Swal.fire({
+                icon: "error",
+                title: "資料沒填完",
+                text: "請正確填寫資料",
+              });
+              valid = false; // 如果任何條件不滿足，將 valid 設為 false
+            }
+          });
+
+          if (valid) {
+            // console.log(id);
+            // console.log(this.products.products[id]);
+            const host = import.meta.env.VITE_HEXAPI_HOST;
+            const path = import.meta.env.VITE_HEXAPI_PATH;
+            //取得 hexToken 的資料
+            const token = document.cookie.replace(
+              /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            );
+            // console.log({ data: { ...this.data } });
+            axios
+              .put(
+                `${host}/v2/api/${path}/admin/product/${id}`,
+                { data: { ...this.data } },
+                {
+                  headers: { Authorization: token },
+                }
+              )
+              .then((res) => {
+                console.log(res);
+                Swal.fire({
+                  icon: "success",
+                  title: "編輯產品成功",
+                });
+                this.products.products[id] = this.data;
+                this.data = {
+                  title: "",
+                  category: "",
+                  origin_price: "",
+                  price: "",
+                  unit: "",
+                  description: "",
+                  content: "",
+                  is_enabled: 1,
+                  imageUrl: "",
+                  imagesUrl: ["", "", "", "", ""],
+                };
+              })
+              .catch((err) => {
+                console.error(err);
+                Swal.fire({
+                  icon: "error",
+                  title: "編輯產品失敗",
+                });
+              });
+          }
+        }
+      });
     },
     addProduct() {
       let valid = true;
@@ -214,9 +290,9 @@ const Week3Store = defineStore("Week3Store", {
             /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
             "$1"
           );
-
+          // console.log(`${host}/v2/api/${path}/admin/product/${id}`);
           axios
-            .delete(`${host}/v2/api/${path}/admin/order/${id}`, {
+            .delete(`${host}/v2/api/${path}/admin/product/${id}`, {
               headers: { Authorization: token },
             })
             .then((res) => {

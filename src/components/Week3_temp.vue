@@ -9,9 +9,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(Week3Store, ["showProducts", "products", "dataTemp"]),
+    ...mapState(Week3Store, ["showProducts", "products", "data"]),
   },
-  methods: { ...mapActions(Week3Store, ["changeProducts", "editProduct"]) },
+  methods: {
+    ...mapActions(Week3Store, ["changeProducts", "editProduct", "submitEdit"]),
+  },
   mounted() {
     this.changeProducts();
     // console.log(document.cookie);
@@ -20,13 +22,13 @@ export default {
 </script>
 <template>
   <div class="editBlock">
-    <!-- <p>{{ dataTemp }}</p> -->
+    <!-- <p>{{ data }}</p> -->
 
     <div class="card mb-3">
       <div class="card-body">
         <p class="card-text mainImg">
           <img
-            :src="dataTemp.imageUrl"
+            :src="data.imageUrl"
             class="card-img-top primary-image"
             width="100"
           />
@@ -37,46 +39,49 @@ export default {
           <input
             type="text"
             placeholder="請輸入圖片網址"
-            v-model.lazy="dataTemp.imageUrl"
+            v-model.lazy="data.imageUrl"
           />
         </p>
         <p class="card-text">
-          商品分類：<input type="text" v-model="dataTemp.category" />
+          商品分類：<input type="text" v-model="data.category" />
         </p>
         <p class="card-text">
-          商品單位：<input type="text" v-model="dataTemp.unit" />
+          商品單位：<input type="text" v-model="data.unit" />
         </p>
         <p class="card-text">
-          商品名稱：<input type="text" v-model="dataTemp.title" />
+          商品名稱：<input type="text" v-model="data.title" />
         </p>
         <p class="card-text">
-          商品敘述：<textarea
-            type="text"
-            v-model="dataTemp.description"
-          ></textarea>
+          商品敘述：<textarea type="text" v-model="data.description"></textarea>
         </p>
         <p class="card-text">
-          商品原價：<input type="number" v-model="dataTemp.origin_price" />
+          商品原價：<input type="number" v-model="data.origin_price" />
         </p>
         <p class="card-text">
-          商品價格：<input type="number" v-model="dataTemp.price" />
+          商品價格：<input type="number" v-model="data.price" />
         </p>
         <p class="card-text">
           是否啟用：
           <label for="is_enabled">{{
-            dataTemp.is_enabled === 1 ? "啟用" : "未啟用"
+            data.is_enabled === 1 ? "啟用" : "未啟用"
           }}</label>
           <input
             id="is_enabled"
             type="checkbox"
-            :checked="dataTemp.is_enabled === 1"
-            @change="dataTemp.is_enabled = dataTemp.is_enabled === 1 ? 0 : 1"
+            :checked="data.is_enabled === 1"
+            @change="data.is_enabled = data.is_enabled === 1 ? 0 : 1"
           />
         </p>
-        <button class="btn btn-primary" type="button">完成編輯</button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          @click="submitEdit(data.id)"
+        >
+          完成編輯
+        </button>
       </div>
     </div>
-    <template v-for="(item, index) in temp.imagesUrl" :key="index">
+    <template v-for="(item, index) in data.imagesUrl" :key="index">
       <img :src="item" alt="" class="images m-2" />
     </template>
     <br />
