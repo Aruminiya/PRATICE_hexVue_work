@@ -14,7 +14,13 @@ export default {
   computed: {
     ...mapState(Week3Store, ["showProducts", "products", "dataTemp"]),
   },
-  methods: { ...mapActions(Week3Store, ["changeProducts", "editProduct"]) },
+  methods: {
+    ...mapActions(Week3Store, [
+      "changeProducts",
+      "editProduct",
+      "deleteProduct",
+    ]),
+  },
   mounted() {
     this.changeProducts();
     // console.log(document.cookie);
@@ -83,7 +89,11 @@ export default {
                     >
                       編輯
                     </button>
-                    <button type="button" class="btn btn-outline-danger btn-sm">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-sm"
+                      @click="deleteProduct(item.id)"
+                    >
                       刪除
                     </button>
                   </div>

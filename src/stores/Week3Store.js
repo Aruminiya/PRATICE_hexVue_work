@@ -98,7 +98,7 @@ const Week3Store = defineStore("Week3Store", {
     },
     editProduct(id) {
       console.log(id);
-      //抓到該編輯資料
+      //抓到該編輯資料位置
       const dataIndex = this.showProducts.findIndex(
         (productId) => productId.id === id
       );
@@ -191,6 +191,51 @@ const Week3Store = defineStore("Week3Store", {
             };
           });
       }
+    },
+    deleteProduct(id) {
+      //抓到該刪除資料位置
+      Swal.fire({
+        title: "確定要刪除資料嗎?",
+        text: "刪除後資料無法還原",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "確定刪除",
+        cancelButtonText: "取消",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // console.log(id);
+          // console.log(this.products.products[id]);
+          const host = import.meta.env.VITE_HEXAPI_HOST;
+          const path = import.meta.env.VITE_HEXAPI_PATH;
+          //取得 hexToken 的資料
+          const token = document.cookie.replace(
+            /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          );
+
+          axios
+            .delete(`${host}/v2/api/${path}/admin/order/${id}`, {
+              headers: { Authorization: token },
+            })
+            .then((res) => {
+              console.log(res);
+              Swal.fire({
+                icon: "success",
+                title: "刪除產品成功",
+              });
+              delete this.products.products[id];
+            })
+            .catch((err) => {
+              console.error(err);
+              Swal.fire({
+                icon: "error",
+                title: "刪除產品失敗",
+              });
+            });
+        }
+      });
     },
   },
 });
