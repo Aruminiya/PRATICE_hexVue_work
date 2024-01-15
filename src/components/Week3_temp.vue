@@ -23,14 +23,28 @@ export default {
     <!-- <p>{{ dataTemp }}</p> -->
 
     <div class="card mb-3">
-      <img
-        :src="dataTemp.imageUrl"
-        class="card-img-top primary-image"
-        alt="主圖"
-      />
       <div class="card-body">
+        <p class="card-text mainImg">
+          <img
+            :src="dataTemp.imageUrl"
+            class="card-img-top primary-image"
+            width="100"
+          />
+          <br />
+        </p>
+        <p class="card-text">
+          <label for="">主圖：</label>
+          <input
+            type="text"
+            placeholder="請輸入圖片網址"
+            v-model.lazy="dataTemp.imageUrl"
+          />
+        </p>
         <p class="card-text">
           商品分類：<input type="text" v-model="dataTemp.category" />
+        </p>
+        <p class="card-text">
+          商品單位：<input type="text" v-model="dataTemp.unit" />
         </p>
         <p class="card-text">
           商品名稱：<input type="text" v-model="dataTemp.title" />

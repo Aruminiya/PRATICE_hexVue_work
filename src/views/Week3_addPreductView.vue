@@ -37,7 +37,7 @@ export default {
           <br />
         </p>
         <p class="card-text">
-          <label for="">主圖</label>
+          <label for="">主圖：</label>
           <input
             type="text"
             placeholder="請輸入圖片網址"
