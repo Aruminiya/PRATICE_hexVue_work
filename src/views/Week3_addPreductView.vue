@@ -28,7 +28,7 @@ export default {
 
     <div class="card mb-3">
       <div class="card-body">
-        <p class="card-text mainImg">
+        <p class="card-text productImg">
           <img
             :src="data.imageUrl"
             class="card-img-top primary-image"
@@ -37,8 +37,9 @@ export default {
           <br />
         </p>
         <p class="card-text">
-          <label for="">主圖：</label>
+          <label for="mainImg">主圖：</label>
           <input
+            id="mainImg"
             type="text"
             placeholder="請輸入圖片網址"
             v-model.lazy="data.imageUrl"
@@ -74,6 +75,91 @@ export default {
             @change="data.is_enabled = data.is_enabled === 1 ? 0 : 1"
           />
         </p>
+        <p class="card-text sideProductImg">
+          <img
+            :src="data.imagesUrl[0]"
+            class="card-img-top primary-image"
+            width="100"
+          />
+          <br />
+        </p>
+        <p class="card-text">
+          <label for="img_01">產品圖1：</label>
+          <input
+            id="img_01"
+            type="text"
+            placeholder="請輸入圖片網址"
+            v-model.lazy="data.imagesUrl[0]"
+          />
+        </p>
+        <p class="card-text sideProductImg">
+          <img
+            :src="data.imagesUrl[1]"
+            class="card-img-top primary-image"
+            width="100"
+          />
+          <br />
+        </p>
+        <p class="card-text">
+          <label for="img_02">產品圖2：</label>
+          <input
+            id="img_02"
+            type="text"
+            placeholder="請輸入圖片網址"
+            v-model.lazy="data.imagesUrl[1]"
+          />
+        </p>
+        <p class="card-text sideProductImg">
+          <img
+            :src="data.imagesUrl[2]"
+            class="card-img-top primary-image"
+            width="100"
+          />
+          <br />
+        </p>
+        <p class="card-text">
+          <label for="img_03">產品圖3：</label>
+          <input
+            id="img_03"
+            type="text"
+            placeholder="請輸入圖片網址"
+            v-model.lazy="data.imagesUrl[2]"
+          />
+        </p>
+        <p class="card-text sideProductImg">
+          <img
+            :src="data.imagesUrl[3]"
+            class="card-img-top primary-image"
+            width="100"
+          />
+          <br />
+        </p>
+        <p class="card-text">
+          <label for="img_04">產品圖4：</label>
+          <input
+            id="img_04"
+            type="text"
+            placeholder="請輸入圖片網址"
+            v-model.lazy="data.imagesUrl[3]"
+          />
+        </p>
+        <p class="card-text sideProductImg">
+          <img
+            :src="data.imagesUrl[4]"
+            class="card-img-top primary-image"
+            width="100"
+          />
+          <br />
+        </p>
+        <p class="card-text">
+          <label for="img_05">產品圖5：</label>
+          <input
+            id="img_05"
+            type="text"
+            placeholder="請輸入圖片網址"
+            v-model.lazy="data.imagesUrl[4]"
+          />
+        </p>
         <div class="d-flex">
           <button
             class="btn btn-primary mx-1"
@@ -101,13 +187,30 @@ export default {
   </div>
 </template>
 <style lang="scss" scoped>
-.mainImg {
+.productImg {
+  overflow: hidden;
   height: 300px;
+  width: 300px;
   background-image: url("https://as2.ftcdn.net/v2/jpg/02/45/49/25/1000_F_245492548_Rqq1vuVKr2SCbmhizERoIxNsY2JPpzz7.jpg");
   background-size: 300px;
   background-repeat: no-repeat;
-  img {
-    width: 300px;
+  Img {
+    object-fit: cover;
+    height: 300px;
+  }
+}
+
+.sideProductImg {
+  overflow: hidden;
+  height: 100px;
+  width: 100px;
+  background-image: url("https://as2.ftcdn.net/v2/jpg/02/45/49/25/1000_F_245492548_Rqq1vuVKr2SCbmhizERoIxNsY2JPpzz7.jpg");
+  background-size: 100px;
+  background-repeat: no-repeat;
+  Img {
+    object-fit: cover;
+    height: 100px;
+    width: 100px;
   }
 }
 </style>
