@@ -4,6 +4,7 @@ const path = import.meta.env.VITE_HEXAPI_PATH;
 
 let productModal = null;
 let delProductModal = null;
+
 export default {
   data() {
     return {
@@ -35,6 +36,28 @@ export default {
     this.checkAdmin();
   },
   methods: {
+    hideProductModal() {
+      // 透過 Vue 的方式來隱藏 Modal
+      this.$refs.productModalRef.classList.remove("show");
+      this.$el.ownerDocument.body.classList.remove("modal-open");
+      // Modal 隱藏時觸發，清空 body 的樣式
+      this.$el.ownerDocument.body.style.paddingRight = "";
+      this.$el.ownerDocument.body.style.overflow = "";
+      // 移除 modal-backdrop
+      const modalBackdrop =
+        this.$el.ownerDocument.querySelector(".modal-backdrop");
+      if (modalBackdrop) {
+        modalBackdrop.parentNode.removeChild(modalBackdrop);
+      }
+    },
+    // showProductModal() {
+    //   // 透過 $refs.productModalRef.show() 顯示 Modal
+    //   this.$refs.productModalRef.show();
+    // },
+    // hideProductModal() {
+    //   // 透過 $refs.productModalRef.hide() 隱藏 Modal
+    //   this.$refs.productModalRef.hide();
+    // },
     checkAdmin() {
       const url = `${host}/v2/api/user/check`;
       this.axios
@@ -83,7 +106,8 @@ export default {
       this.axios[http](url, { data: this.tempProduct })
         .then((response) => {
           alert(response.data.message);
-          productModal.hide();
+          // productModal.hide();
+          this.hideProductModal();
           this.getData();
         })
         .catch((err) => {
@@ -206,8 +230,9 @@ export default {
       tabindex="-1"
       aria-labelledby="productModalLabel"
       aria-hidden="true"
+      ref="productModalRef"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="productModalLabel">
@@ -393,9 +418,18 @@ export default {
               class="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              Close
+              <span v-if="isNew">取消新增</span> <span v-else>取消編輯</span>
             </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button v-if="isNew" type="button" class="btn btn-primary">
+              確定新增產品</button
+            ><button
+              v-else
+              type="button"
+              class="btn btn-primary"
+              @click="updateProduct()"
+            >
+              確定編輯產品
+            </button>
           </div>
         </div>
       </div>
@@ -417,5 +451,9 @@ img {
 }
 .editTextShow {
   opacity: 0.5;
+}
+.modal-header {
+  background-color: rgb(112, 112, 112);
+  color: white;
 }
 </style>
