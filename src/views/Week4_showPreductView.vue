@@ -1,4 +1,5 @@
 <script>
+import * as bootstrap from "bootstrap/dist/js/bootstrap.min.js";
 const host = import.meta.env.VITE_HEXAPI_HOST;
 const path = import.meta.env.VITE_HEXAPI_PATH;
 
@@ -18,13 +19,12 @@ export default {
     };
   },
   mounted() {
-    // productModal = new bootstrap.Modal(this.$refs.productModal, {
-    //   keyboard: false,
-    // });
-
-    // delProductModal = new bootstrap.Modal(this.$refs.delProductModal, {
-    //   keyboard: false,
-    // });
+    productModal = new bootstrap.Modal(
+      document.getElementById("productModal"),
+      {
+        keyboard: false,
+      }
+    );
 
     // 取出 Token
     const token = document.cookie.replace(
@@ -36,28 +36,13 @@ export default {
     this.checkAdmin();
   },
   methods: {
-    hideProductModal() {
-      // 透過 Vue 的方式來隱藏 Modal
-      this.$refs.productModalRef.classList.remove("show");
-      this.$el.ownerDocument.body.classList.remove("modal-open");
-      // Modal 隱藏時觸發，清空 body 的樣式
-      this.$el.ownerDocument.body.style.paddingRight = "";
-      this.$el.ownerDocument.body.style.overflow = "";
-      // 移除 modal-backdrop
-      const modalBackdrop =
-        this.$el.ownerDocument.querySelector(".modal-backdrop");
-      if (modalBackdrop) {
-        modalBackdrop.parentNode.removeChild(modalBackdrop);
-      }
+    productModalShow() {
+      productModal.show();
     },
-    // showProductModal() {
-    //   // 透過 $refs.productModalRef.show() 顯示 Modal
-    //   this.$refs.productModalRef.show();
-    // },
-    // hideProductModal() {
-    //   // 透過 $refs.productModalRef.hide() 隱藏 Modal
-    //   this.$refs.productModalRef.hide();
-    // },
+    productModalHide() {
+      productModal.hide();
+    },
+
     checkAdmin() {
       const url = `${host}/v2/api/user/check`;
       this.axios
@@ -69,6 +54,7 @@ export default {
           console.error(err);
           this.$swal({
             title: "登入驗證失敗",
+            text: err.response.data.message,
             icon: "error",
             showCancelButton: false,
             confirmButtonColor: "#3085d6",
@@ -79,8 +65,6 @@ export default {
               this.$router.push("/Week4");
             }
           });
-          // alert(err.response.data.message);
-          // 頁面跳轉
         });
     },
     getData() {
@@ -91,7 +75,20 @@ export default {
           this.products = response.data.products;
         })
         .catch((err) => {
-          alert(err.response.data.message);
+          // alert(err.response.data.message);
+          this.$swal({
+            title: "資料取得失敗",
+            text: err.response.data.message,
+            icon: "error",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "確定",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // 頁面跳轉
+              this.$router.push("/Week4");
+            }
+          });
         });
     },
     updateProduct() {
@@ -105,10 +102,20 @@ export default {
 
       this.axios[http](url, { data: this.tempProduct })
         .then((response) => {
-          alert(response.data.message);
-          // productModal.hide();
-          this.hideProductModal();
-          this.getData();
+          this.$swal({
+            title: response.data.message,
+            icon: "success",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "確定",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.productModalHide();
+              this.getData();
+            }
+          });
+
+          // 隱藏 BS5 Modal
         })
         .catch((err) => {
           alert(err.response.data.message);
@@ -120,29 +127,56 @@ export default {
           imagesUrl: [],
         };
         this.isNew = true;
-        // this.$refs.productModal.show();
+        this.productModalShow();
       } else if (isNew === "edit") {
         this.tempProduct = { ...item };
         this.isNew = false;
-        // this.$refs.productModal.show();
-      } else if (isNew === "delete") {
-        this.tempProduct = { ...item };
-        // this.$refs.delProductModal.show();
+        this.productModalShow();
       }
     },
-    delProduct() {
-      const url = `${host}/api/${path}/admin/product/${this.tempProduct.id}`;
-
-      this.axios
-        .delete(url)
-        .then((response) => {
-          alert(response.data.message);
-          delProductModal.hide();
-          this.getData();
-        })
-        .catch((err) => {
-          alert(err.response.data.message);
-        });
+    delProduct(id) {
+      this.$swal({
+        title: "確定要刪除此筆商品嗎?",
+        text: "刪除後將無法恢復操作",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "是的 我要刪除",
+        cancelButtonText: "取消",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const url = `${host}/api/${path}/admin/product/${id}`;
+          this.axios
+            .delete(url)
+            .then((response) => {
+              this.$swal({
+                title: response.data.message,
+                icon: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "確定",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.getData();
+                }
+              });
+            })
+            .catch((err) => {
+              this.$swal({
+                title: err.response.data.message,
+                icon: "error",
+                showCancelButton: false,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "確定",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.getData();
+                }
+              });
+            });
+        }
+      });
     },
     createImages() {
       this.tempProduct.imagesUrl = [];
@@ -162,8 +196,6 @@ export default {
           type="button"
           class="btn btn-primary"
           ref="productModal"
-          data-bs-toggle="modal"
-          data-bs-target="#productModalLabel"
           @click="openModal('new')"
         >
           建立新的產品
@@ -198,7 +230,7 @@ export default {
               <div class="btn-group">
                 <button
                   type="button"
-                  class="btn btn-outline-primary"
+                  class="btn btn-outline-primary btn-sm"
                   ref="productModal"
                   data-bs-toggle="modal"
                   data-bs-target="#productModalLabel"
@@ -209,7 +241,7 @@ export default {
                 <button
                   type="button"
                   class="btn btn-outline-danger btn-sm"
-                  @click="openModal('delete', item)"
+                  @click="delProduct(item.id)"
                 >
                   刪除
                 </button>
@@ -226,11 +258,10 @@ export default {
     <!-- Modal -->
     <div
       class="modal fade"
-      id="productModalLabel"
+      id="productModal"
       tabindex="-1"
       aria-labelledby="productModalLabel"
       aria-hidden="true"
-      ref="productModalRef"
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -240,10 +271,13 @@ export default {
             </h5>
             <button
               type="button"
-              class="btn-close"
+              class="btn-close btn btn-danger"
               data-bs-dismiss="modal"
               aria-label="Close"
-            ></button>
+              @click="productModalHide()"
+            >
+              X
+            </button>
           </div>
           <div class="modal-body">
             <div class="row">
@@ -260,12 +294,9 @@ export default {
                   <img class="img-fluid" :src="tempProduct.imageUrl" />
                 </div>
                 <h3 class="mb-3">多圖新增</h3>
+                <!--JS 判別是否為陣列Array-->
                 <div v-if="Array.isArray(tempProduct.imagesUrl)">
-                  <div
-                    class="mb-1"
-                    v-for="(image, key) in tempProduct.imagesUrl"
-                    :key="key"
-                  >
+                  <div v-for="(image, key) in tempProduct.imagesUrl" :key="key">
                     <div class="mb-3">
                       <label :for="`imagesUrl${key}`" class="form-label"
                         >圖片網址</label
@@ -417,18 +448,17 @@ export default {
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              @click="productModalHide()"
             >
               <span v-if="isNew">取消新增</span> <span v-else>取消編輯</span>
             </button>
-            <button v-if="isNew" type="button" class="btn btn-primary">
-              確定新增產品</button
-            ><button
-              v-else
+            <button
               type="button"
               class="btn btn-primary"
               @click="updateProduct()"
             >
-              確定編輯產品
+              <span v-if="isNew">確定新增產品</span>
+              <span v-else>確定編輯產品</span>
             </button>
           </div>
         </div>

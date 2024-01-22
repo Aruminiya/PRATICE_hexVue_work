@@ -19,6 +19,7 @@ export default {
         .post(api, this.user)
         .then((response) => {
           const { token, expired } = response.data;
+          console.log(response);
           // 寫入 cookie token
           // expires 設置有效時間
           document.cookie = `hexToken=${token};expires=${new Date(
@@ -27,7 +28,7 @@ export default {
           console.log("登入成功");
 
           this.$swal({
-            title: "登入成功",
+            title: response.data.message,
             icon: "success",
             showCancelButton: false,
             confirmButtonColor: "#3085d6",
@@ -41,9 +42,9 @@ export default {
         })
         .catch((err) => {
           console.log("登入失敗");
-          console.error("err");
+          console.error(err);
           this.$swal({
-            title: "登入失敗",
+            title: err.response.data.message,
             icon: "error",
             showCancelButton: false,
             confirmButtonColor: "#3085d6",
