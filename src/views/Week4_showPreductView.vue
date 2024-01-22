@@ -263,6 +263,7 @@ export default {
       :isNew="isNew"
       @productModalShowEmit="productModalShow()"
       @productModalHideEmit="productModalHide()"
+      @getDataEmit="getData()"
     />
   </main>
 </template>

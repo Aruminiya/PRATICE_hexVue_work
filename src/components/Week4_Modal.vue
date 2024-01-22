@@ -6,7 +6,7 @@ let productModal = null;
 
 export default {
   props: ["tempProduct", "isNew"],
-  emits: ["productModalShowEmit", "productModalHideEmit"],
+  emits: ["productModalShowEmit", "productModalHideEmit", "getDataEmit"],
   data() {
     return {
       products: [],
@@ -18,6 +18,39 @@ export default {
     },
     productModalHideEmit() {
       this.$emit("productModalHideEmit");
+    },
+    getDataEmit() {
+      this.$emit("getDataEmit");
+    },
+    updateProduct() {
+      let url = `${host}/api/${path}/admin/product`;
+      let http = "post";
+
+      if (!this.isNew) {
+        url = `${host}/api/${path}/admin/product/${this.tempProduct.id}`;
+        http = "put";
+      }
+
+      this.axios[http](url, { data: this.tempProduct })
+        .then((response) => {
+          this.$swal({
+            title: response.data.message,
+            icon: "success",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "確定",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.productModalHideEmit();
+              this.getDataEmit();
+            }
+          });
+
+          // 隱藏 BS5 Modal
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
     },
   },
 };
