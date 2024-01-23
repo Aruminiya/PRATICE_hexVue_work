@@ -2,23 +2,17 @@
 import * as bootstrap from "bootstrap/dist/js/bootstrap.min.js";
 const host = import.meta.env.VITE_HEXAPI_HOST;
 const path = import.meta.env.VITE_HEXAPI_PATH;
-let productModal = null;
 
 export default {
   props: ["tempProduct", "isNew"],
-  emits: ["productModalShowEmit", "productModalHideEmit", "getDataEmit"],
+  emits: ["getDataEmit", "productModalCreate"],
   data() {
     return {
       products: [],
+      productModal: null,
     };
   },
   methods: {
-    productModalShowEmit() {
-      this.$emit("productModalShowEmit");
-    },
-    productModalHideEmit() {
-      this.$emit("productModalHideEmit");
-    },
     getDataEmit() {
       this.$emit("getDataEmit");
     },
@@ -41,7 +35,7 @@ export default {
             confirmButtonText: "確定",
           }).then((result) => {
             if (result.isConfirmed) {
-              this.productModalHideEmit();
+              this.productModal.hide();
               this.getDataEmit();
             }
           });
@@ -53,6 +47,15 @@ export default {
         });
     },
   },
+  mounted() {
+    console.log(this.productModal);
+    // 在內層元件建立 updateModal BS5 實體 及寫 emit 傳遞到外層
+    this.productModal = new bootstrap.Modal(this.$refs.productModal, {
+      keyboard: false,
+    });
+    console.log(this.productModal);
+    this.$emit("productModalCreate", this.productModal);
+  },
 };
 </script>
 
@@ -60,6 +63,7 @@ export default {
   <div
     class="modal fade"
     id="productModal"
+    ref="productModal"
     tabindex="-1"
     aria-labelledby="productModalLabel"
     aria-hidden="true"
@@ -75,7 +79,7 @@ export default {
             class="btn-close btn btn-danger"
             data-bs-dismiss="modal"
             aria-label="Close"
-            @click="productModalHideEmit()"
+            @click="this.productModal.hide()"
           >
             X
           </button>
@@ -249,7 +253,7 @@ export default {
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
-            @click="productModalHideEmit()"
+            @click="this.productModal.hide()"
           >
             <span v-if="isNew">取消新增</span> <span v-else>取消編輯</span>
           </button>

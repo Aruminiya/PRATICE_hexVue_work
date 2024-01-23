@@ -5,12 +5,11 @@ import Week4_Modal from "../components/Week4_Modal.vue";
 const host = import.meta.env.VITE_HEXAPI_HOST;
 const path = import.meta.env.VITE_HEXAPI_PATH;
 
-let productModal = null;
-
 export default {
   components: { Week4_Modal },
   data() {
     return {
+      productModal: null,
       products: [],
       isNew: false,
       tempProduct: {
@@ -19,13 +18,6 @@ export default {
     };
   },
   mounted() {
-    productModal = new bootstrap.Modal(
-      document.getElementById("productModal"),
-      {
-        keyboard: false,
-      }
-    );
-
     // 取出 Token
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
@@ -37,10 +29,15 @@ export default {
   },
   methods: {
     productModalShow() {
-      productModal.show();
+      this.productModal.show();
     },
     productModalHide() {
-      productModal.hide();
+      this.productModal.hide();
+    },
+    // 接收 modal 元件 的 productModalCreate
+    getProductModalCreate(productModal) {
+      this.productModal = productModal;
+      console.log(productModal);
     },
 
     checkAdmin() {
@@ -110,7 +107,7 @@ export default {
             confirmButtonText: "確定",
           }).then((result) => {
             if (result.isConfirmed) {
-              this.productModalHide();
+              this.productModal.hide();
               this.getData();
             }
           });
@@ -127,11 +124,11 @@ export default {
           imagesUrl: [],
         };
         this.isNew = true;
-        this.productModalShow();
+        this.productModal.show();
       } else if (isNew === "edit") {
         this.tempProduct = { ...item };
         this.isNew = false;
-        this.productModalShow();
+        this.productModal.show();
       }
     },
     delProduct(id) {
@@ -261,8 +258,7 @@ export default {
     <Week4_Modal
       :tempProduct="tempProduct"
       :isNew="isNew"
-      @productModalShowEmit="productModalShow()"
-      @productModalHideEmit="productModalHide()"
+      @productModalCreate="getProductModalCreate($event)"
       @getDataEmit="getData()"
     />
   </main>
