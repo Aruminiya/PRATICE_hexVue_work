@@ -80,9 +80,7 @@ export default {
             data-bs-dismiss="modal"
             aria-label="Close"
             @click="this.productModal.hide()"
-          >
-            X
-          </button>
+          ></button>
         </div>
         <div class="modal-body">
           <div class="row">
