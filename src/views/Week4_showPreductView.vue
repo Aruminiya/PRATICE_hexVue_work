@@ -1,16 +1,18 @@
 <script>
 import * as bootstrap from "bootstrap/dist/js/bootstrap.min.js";
 import Week4_Modal from "../components/Week4_Modal.vue";
+import Week4_Pagination from "../components/Week4_Pagination.vue";
 
 const host = import.meta.env.VITE_HEXAPI_HOST;
 const path = import.meta.env.VITE_HEXAPI_PATH;
 
 export default {
-  components: { Week4_Modal },
+  components: { Week4_Modal, Week4_Pagination },
   data() {
     return {
       productModal: null,
       products: [],
+      pagination: {},
       isNew: false,
       tempProduct: {
         imagesUrl: [],
@@ -64,12 +66,14 @@ export default {
           });
         });
     },
-    getData() {
-      const url = `${host}/api/${path}/admin/products/all`;
+    getData(page = 1) {
+      const url = `${host}/api/${path}/admin/products?page=${page}`;
       this.axios
         .get(url)
         .then((response) => {
-          this.products = response.data.products;
+          const { products, pagination } = response.data;
+          this.products = products;
+          this.pagination = pagination;
         })
         .catch((err) => {
           // alert(err.response.data.message);
@@ -247,6 +251,7 @@ export default {
           </tr>
         </tbody>
       </table>
+      <Week4_Pagination :pages="pagination" @emit-pages="getData" />
     </div>
 
     <!-- Button trigger modal -->
