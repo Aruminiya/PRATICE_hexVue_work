@@ -48,6 +48,11 @@ const router = createRouter({
       name: "Week4_showPreductView",
       component: () => import("../views/Week4_showPreductView.vue"),
     },
+    {
+      path: "/week5",
+      name: "week5",
+      component: () => import("../views/Week5View.vue"),
+    },
   ],
 });
 

@@ -13,10 +13,15 @@ import VueAxios from "vue-axios";
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
+// vue-loading-overlay 套件
+import { LoadingPlugin } from "vue-loading-overlay";
+import "vue-loading-overlay/dist/css/index.css";
+
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
 app.use(VueAxios, axios);
 app.use(VueSweetalert2);
+app.use(LoadingPlugin);
 app.mount("#app");
