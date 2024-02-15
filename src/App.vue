@@ -30,6 +30,8 @@ export default {};
           >Week4</RouterLink
         ><RouterLink to="/week5" class="nav-item nav-link active" href="#"
           >Week5</RouterLink
+        ><RouterLink to="/week6" class="nav-item nav-link active" href="#"
+          >Week6</RouterLink
         >
       </div>
     </div>
