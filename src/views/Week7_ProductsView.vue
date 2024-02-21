@@ -2,12 +2,16 @@
 import { mapState, mapActions } from "pinia";
 import Week7_productStore from "../stores/Week7_productStore.js";
 
+import Week7_Modal from "../components/Week7_Modal.vue";
+
 export default {
+  components: { Week7_Modal },
   data() {
     return {
       isLoading: false,
-      //   product: "",
       id: "",
+      product: {},
+      isModalNew: true,
     };
   },
   computed: {
@@ -15,7 +19,13 @@ export default {
   },
   methods: {
     ...mapActions(Week7_productStore, ["getProducts"]),
+    editProduct(item) {
+      this.product = item;
+      this.isModalNew = false;
+      this.$refs.modal.modalShow();
+    },
   },
+
   mounted() {
     this.getProducts();
   },
@@ -23,7 +33,7 @@ export default {
 </script>
 
 <template>
-  <!-- {{ products }} -->
+  <Week7_Modal ref="modal" v-model:tempProduct="product" :isNew="isModalNew" />
   <div class="text-end mt-4">
     <button class="btn btn-primary" type="button" @click="openModal(true)">
       建立新的產品
@@ -59,7 +69,7 @@ export default {
             <button
               class="btn btn-outline-primary btn-sm"
               type="button"
-              @click="openModal(false, item)"
+              @click="editProduct(item)"
             >
               編輯
             </button>
