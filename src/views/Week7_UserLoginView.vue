@@ -1,13 +1,7 @@
 <script>
 import { mapActions } from "pinia";
-import { Week7_useToastMessageStore } from "@/stores/Week7_useToastMessageStore.js";
-
-import Week7_ToastMessages from "@/components/Week7_ToastMessages.vue";
 
 export default {
-  components: {
-    Week7_ToastMessages,
-  },
   data() {
     return {
       isLoading: false,
@@ -15,7 +9,6 @@ export default {
     };
   },
   methods: {
-    ...mapActions(Week7_useToastMessageStore, ["pushMessage"]),
     signIn() {
       const host = import.meta.env.VITE_HEXAPI_HOST;
       const path = import.meta.env.VITE_HEXAPI_PATH;
@@ -48,7 +41,6 @@ export default {
   <hr />
   <LoadingIcon v-model:isLoading="isLoading" />
   <div class="container mt-5">
-    <Week7_ToastMessages />
     <form class="row justify-content-center" @submit.prevent="signIn">
       <div class="col-md-6">
         <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
